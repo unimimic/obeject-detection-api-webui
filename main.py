@@ -95,7 +95,10 @@ with gr.Blocks() as demo:
     create_button.click(
         fn=create_project_directory,
         inputs=new_project_name,
-        outputs=output_text
+        outputs=[
+            output_text,
+            project_name
+        ]
     )
 
     project_name.change(

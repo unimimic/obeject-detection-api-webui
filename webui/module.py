@@ -2,6 +2,7 @@ import os
 import json
 import requests
 import tarfile
+import gradio as gr
 
 models = [
     "faster_rcnn_resnet50_v1_1024x1024_coco17_tpu-8",
@@ -80,7 +81,7 @@ def update_fields(project_name):
             settings["required"]["Model"],
             settings["required"]["TFRecord"]
         )
-    return ("", "", 1, 1, 1, "")
+    return ("", "", 1, 1, 1, "", "")
 
 def load_project_settings(project_name):
     project_path = os.path.join("projects", project_name)
@@ -123,7 +124,8 @@ def create_project_directory(project_name):
             os.makedirs(os.path.join(project_path, "Checkpoint"))
             os.makedirs(os.path.join(project_path, "Models"))
             os.makedirs(os.path.join(project_path, "TFRecord"))
-            os.makedirs(os.path.join(project_dataset_path, "Dataset"))
+            os.makedirs(os.path.join(project_dataset_path, "train"))
+            os.makedirs(os.path.join(project_dataset_path, "test"))
             
             # 建立setting.json
             settings = {
@@ -145,11 +147,20 @@ def create_project_directory(project_name):
             with open(os.path.join(project_path, "setting.json"), "w") as f:
                 json.dump(settings, f, indent=2)
             
-            return f"專案資料夾 '{project_name}' 及其子資料夾和設定檔已成功建立。"
+            return (
+                gr.update(value= f"專案資料夾 {project_name} 及其子資料夾和設定檔已成功建立。"),
+                gr.update(choices=get_project_names()),  # 更新專案名稱下拉選單
+            )
         else:
-            return f"專案資料夾 '{project_name}' 已存在。"
+            return (
+                gr.update(value=f"專案資料夾 {project_name} 已存在。"),
+                gr.update(choices=get_project_names()),  # 更新專案名稱下拉選單
+            )
     except Exception as e:
-        return f"建立專案資料夾時發生錯誤: {str(e)}"
+        return (
+            gr.update(value=f"建立專案資料夾時發生錯誤: {str(e)}"),
+            gr.update(choices=get_project_names()), 
+        )
 
 
 def process_string_list(input_text):

@@ -102,5 +102,5 @@ A web interface for Object Detection, implemented using Gradio library.
 5. run sever
     
     ```bash
-    docker run --gpus all -p 7860:7860 -v ./projects:/data/projects object-detection-webui
+    docker run --gpus all -p 7860:7860 -v ./projects:/data/projects -v ./datasets:/data/datasets  object-detection-webui
     ```

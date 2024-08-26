@@ -135,6 +135,7 @@ def write_tf_example(save_path: str, all_files: list, label_map_dict: dict, file
     for idx, file in enumerate(all_files):
       if idx % 100 == 0:
         print(f'On image {idx} of {len(all_files)}')
+        yield print(f'On image {idx} of {len(all_files)}')
 
       if file_format == 'xml':
         with tf.io.gfile.GFile(file, 'r') as fid:
@@ -176,4 +177,4 @@ def generate_record(target_dir: str, data_folders: list, save_dir: str, label_ma
       gen_label_map(label_map_dict, str(save_label_map))
   
   print(f'Finish generating {record_type} set tfrecord')
-  return label_map_dict if is_train else None
+  yield f'Finish generating {record_type} set tfrecord'
